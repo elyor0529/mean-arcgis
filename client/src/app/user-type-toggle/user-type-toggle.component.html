@@ -1,0 +1,17 @@
+<h1 md-dialog-title>Quick info</h1>
+<md-dialog-content>
+    <p>Help patients world wide to find blood donors near them.</p>
+
+    <p>As a <em>donor</em>, you locate yourself using the map by clicking anywhere on the map.
+    <p>For quick navigation, use:
+    <ul>
+        <li><span class="esri-icon-locate"></span> auto locate</li>
+        <li><span class="esri-icon-search"></span> typing the address</li>
+    </ul>
+
+    <p>As a <em>patient</em> you can see the current donors as pins on the map.
+    <p>Click on any pin to see the contact info.
+</md-dialog-content>
+<md-dialog-actions>
+    <button md-raised-button (click)="dialogRef.close()"  type="button"  routerLink="/patient">Close</button>
+</md-dialog-actions>

@@ -1,0 +1,66 @@
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import * as io from 'socket.io-client';
+
+import ModelEvent from '../../models/model-event.model';
+
+declare var window: any;
+
+@Injectable()
+export class SocketService {
+    public static SOCKET_CONNECTED = 'connected';
+    public static SOCKET_DISCONNECTED = 'disconnected';
+    public static SOCKET_ERROR = 'error';
+
+    public static SOCKET_EVENTS: Array<string> = [
+        SocketService.SOCKET_CONNECTED,
+        SocketService.SOCKET_DISCONNECTED,
+        SocketService.SOCKET_ERROR,
+    ];
+
+    public static MODEL_CREATE = 'create';
+    public static MODEL_UPDATE = 'update';
+    public static MODEL_DELETE = 'delete';
+    public static MODEL_EVENTS = [
+        SocketService.MODEL_CREATE,
+        SocketService.MODEL_UPDATE,
+        SocketService.MODEL_DELETE
+    ];
+
+    private static HOST: string = SocketService._computeHost();
+
+    private static _computeHost(): string {
+        return '/';
+    }
+
+    private static _computeSocketUrl(): string {
+        return `${this.HOST}`;
+    }
+
+    private static _createSocket(socketUrl): SocketIOClient.Socket {
+        const socket = io.connect(socketUrl);
+
+        SocketService.SOCKET_EVENTS.forEach((event) => {
+            socket.on(event, (data = '') => {
+                console.log('socket /', event, data);
+            });
+        });
+
+        return socket;
+    }
+
+    get(): Observable<ModelEvent> {
+        const socketUrl = SocketService._computeSocketUrl();
+        const socket = SocketService._createSocket(socketUrl);
+
+        return Observable.create((observer) => {
+            SocketService.MODEL_EVENTS.forEach((event) => {
+                socket.on(event, (data) => (observer.next(new ModelEvent(event, data))));
+            });
+
+            return () => {
+                socket.close();
+            };
+        });
+    }
+}

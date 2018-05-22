@@ -1,0 +1,17 @@
+<!-- Fix broken layout -->
+<md-toolbar color="primary" class="">
+    <span style="cursor: pointer;" routerLink="/dashboard">{{title}}</span>
+
+    <span>
+    <button md-button type="button" routerLink="/patient">
+      Patient
+    </button>
+    <button md-button type="button" routerLink="/donor">
+      Donor
+    </button>
+  </span>
+
+</md-toolbar>
+
+<md-progress-bar mode="indeterminate" color="primary" *ngIf="loading"></md-progress-bar>
+<router-outlet></router-outlet>
